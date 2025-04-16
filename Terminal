@@ -21,7 +21,7 @@ def cadastrar_usuario():
     print("\n--- CADASTRO DE NOVO USUÁRIO ---")
     username = input("Nome de usuário: ")
     if username in usuarios:
-        print("⚠️ Usuário já existe. Tente outro nome.")
+        print("Usuário já existe. Tente outro nome.")
         return False
 
     senha = input("Senha: ")
@@ -34,7 +34,7 @@ def cadastrar_usuario():
         "telefone": telefone
     }
     salvar_usuarios()
-    print("✅ Cadastro realizado com sucesso!")
+    print("Cadastro realizado com sucesso!")
     return True
 
 def login():
@@ -45,10 +45,10 @@ def login():
 
     if username in usuarios and usuarios[username]["senha"] == senha:
         usuario_atual = username
-        print(f"✅ Login bem-sucedido! Bem-vindo, {usuario_atual}!")
+        print(f"Login bem-sucedido! Bem-vindo, {usuario_atual}!")
         return True
     else:
-        print("❌ Usuário ou senha incorretos.")
+        print("Usuário ou senha incorretos.")
         return False
 
 # ========== DADOS FINANCEIROS POR USUÁRIO ==========
@@ -72,14 +72,14 @@ def adicionar_ganho():
     descricao = input("Descrição do ganho: ")
     dados["ganhos"].append({"valor": valor, "descricao": descricao})
     salvar_dados()
-    print("✅ Ganho adicionado com sucesso!")
+    print("Ganho adicionado com sucesso!")
 
 def adicionar_gasto():
     valor = float(input("Digite o valor do gasto: R$ "))
     descricao = input("Descrição do gasto: ")
     dados["gastos"].append({"valor": valor, "descricao": descricao})
     salvar_dados()
-    print("✅ Gasto adicionado com sucesso!")
+    print("Gasto adicionado com sucesso!")
 
 def mostrar_saldo():
     total_ganhos = sum(item["valor"] for item in dados["ganhos"])
@@ -138,7 +138,7 @@ def mostrar_duvidas():
     opcao = input("Escolha o número de uma dúvida para ver a resposta ou digite qualquer outra tecla para voltar: ")
     
     if opcao in duvidas:
-        print(f"\n📌 {duvidas[opcao]['resposta']}\n")
+        print(f"\n {duvidas[opcao]['resposta']}\n")
     else:
         print("Voltando ao menu...\n")
 
@@ -147,9 +147,9 @@ def mostrar_duvidas():
 def mostrar_curiosidades():
     print("\n--- CURIOSIDADES SOBRE DINHEIRO ---")
     curiosidades = [
-        "💡 Você sabia que 1 em cada 4 brasileiros não tem controle sobre seus gastos?",
-        "💡 Guardar R$ 2 por dia dá R$ 60 por mês. Pequenas economias viram grandes resultados.",
-        "💡 O cartão de crédito, se mal usado, é uma das maiores causas de endividamento no Brasil."
+        "Você sabia que 1 em cada 4 brasileiros não tem controle sobre seus gastos?",
+        "Guardar R$ 2 por dia dá R$ 60 por mês. Pequenas economias viram grandes resultados.",
+        "O cartão de crédito, se mal usado, é uma das maiores causas de endividamento no Brasil."
     ]
     for curiosidade in curiosidades:
         print(curiosidade)
@@ -175,7 +175,7 @@ def menu_principal():
         elif opcao == "3":
             mostrar_curiosidades()
         elif opcao == "4":
-            print("Encerrando o programa... Até logo! 👋")
+            print("Encerrando o programa... Até logo!")
             break
         else:
             print("Opção inválida. Tente novamente.")
