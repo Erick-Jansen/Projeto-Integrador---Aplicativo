@@ -1,0 +1,207 @@
+import json
+import os
+
+usuarios = {}
+usuario_atual = None
+dados = {"ganhos": [], "gastos": []}
+
+# ========== SISTEMA DE LOGIN E CADASTRO ==========
+
+def salvar_usuarios():
+    with open("usuarios.json", "w") as f:
+        json.dump(usuarios, f)
+
+def carregar_usuarios():
+    global usuarios
+    if os.path.exists("usuarios.json"):
+        with open("usuarios.json", "r") as f:
+            usuarios = json.load(f)
+
+def cadastrar_usuario():
+    print("\n--- CADASTRO DE NOVO USUÁRIO ---")
+    username = input("Nome de usuário: ")
+    if username in usuarios:
+        print("⚠️ Usuário já existe. Tente outro nome.")
+        return False
+
+    senha = input("Senha: ")
+    email = input("E-mail: ")
+    telefone = input("Telefone (com DDD): ")
+
+    usuarios[username] = {
+        "senha": senha,
+        "email": email,
+        "telefone": telefone
+    }
+    salvar_usuarios()
+    print("✅ Cadastro realizado com sucesso!")
+    return True
+
+def login():
+    global usuario_atual
+    print("\n--- LOGIN ---")
+    username = input("Nome de usuário: ")
+    senha = input("Senha: ")
+
+    if username in usuarios and usuarios[username]["senha"] == senha:
+        usuario_atual = username
+        print(f"✅ Login bem-sucedido! Bem-vindo, {usuario_atual}!")
+        return True
+    else:
+        print("❌ Usuário ou senha incorretos.")
+        return False
+
+# ========== DADOS FINANCEIROS POR USUÁRIO ==========
+
+def salvar_dados():
+    nome_arquivo = f"dados_financeiros_{usuario_atual}.json"
+    with open(nome_arquivo, "w") as f:
+        json.dump(dados, f)
+
+def carregar_dados():
+    global dados
+    nome_arquivo = f"dados_financeiros_{usuario_atual}.json"
+    if os.path.exists(nome_arquivo):
+        with open(nome_arquivo, "r") as f:
+            dados = json.load(f)
+
+# ========== FUNÇÕES DO MENU CONTA ==========
+
+def adicionar_ganho():
+    valor = float(input("Digite o valor do ganho: R$ "))
+    descricao = input("Descrição do ganho: ")
+    dados["ganhos"].append({"valor": valor, "descricao": descricao})
+    salvar_dados()
+    print("✅ Ganho adicionado com sucesso!")
+
+def adicionar_gasto():
+    valor = float(input("Digite o valor do gasto: R$ "))
+    descricao = input("Descrição do gasto: ")
+    dados["gastos"].append({"valor": valor, "descricao": descricao})
+    salvar_dados()
+    print("✅ Gasto adicionado com sucesso!")
+
+def mostrar_saldo():
+    total_ganhos = sum(item["valor"] for item in dados["ganhos"])
+    total_gastos = sum(item["valor"] for item in dados["gastos"])
+    saldo = total_ganhos - total_gastos
+
+    print("\n--- RESUMO FINANCEIRO ---")
+    print(f"Total de ganhos: R$ {total_ganhos:.2f}")
+    print(f"Total de gastos: R$ {total_gastos:.2f}")
+    print(f"Saldo final: R$ {saldo:.2f}")
+    print("-------------------------")
+
+def menu_conta():
+    while True:
+        print("\n--- MENU CONTA ---")
+        print("1 - Adicionar Ganho")
+        print("2 - Adicionar Gasto")
+        print("3 - Ver Saldo")
+        print("4 - Voltar ao Menu Principal")
+
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == "1":
+            adicionar_ganho()
+        elif opcao == "2":
+            adicionar_gasto()
+        elif opcao == "3":
+            mostrar_saldo()
+        elif opcao == "4":
+            break
+        else:
+            print("Opção inválida. Tente novamente.")
+
+# ========== DÚVIDAS ==========
+
+def mostrar_duvidas():
+    print("\n--- DÚVIDAS FREQUENTES ---")
+    duvidas = {
+        "1": {
+            "pergunta": "O que é educação financeira?",
+            "resposta": "Educação financeira é o processo de aprender a lidar melhor com o dinheiro, planejando gastos, poupando e evitando dívidas desnecessárias."
+        },
+        "2": {
+            "pergunta": "Por que é importante anotar meus gastos?",
+            "resposta": "Anotar os gastos ajuda a entender para onde o dinheiro está indo e a tomar decisões melhores para evitar desperdícios."
+        },
+        "3": {
+            "pergunta": "Como posso começar a economizar mesmo ganhando pouco?",
+            "resposta": "Você pode começar guardando uma pequena parte do que ganha todo mês, evitando compras por impulso e buscando alternativas mais baratas."
+        }
+    }
+
+    for chave, item in duvidas.items():
+        print(f"{chave} - {item['pergunta']}")
+
+    opcao = input("Escolha o número de uma dúvida para ver a resposta ou digite qualquer outra tecla para voltar: ")
+    
+    if opcao in duvidas:
+        print(f"\n📌 {duvidas[opcao]['resposta']}\n")
+    else:
+        print("Voltando ao menu...\n")
+
+# ========== CURIOSIDADES ==========
+
+def mostrar_curiosidades():
+    print("\n--- CURIOSIDADES SOBRE DINHEIRO ---")
+    curiosidades = [
+        "💡 Você sabia que 1 em cada 4 brasileiros não tem controle sobre seus gastos?",
+        "💡 Guardar R$ 2 por dia dá R$ 60 por mês. Pequenas economias viram grandes resultados.",
+        "💡 O cartão de crédito, se mal usado, é uma das maiores causas de endividamento no Brasil."
+    ]
+    for curiosidade in curiosidades:
+        print(curiosidade)
+    input("\nPressione Enter para voltar ao menu...")
+
+# ========== MENU PRINCIPAL ==========
+
+def menu_principal():
+    carregar_dados()
+    while True:
+        print("\n==== MENU PRINCIPAL ====")
+        print("1 - Conta")
+        print("2 - Dúvidas")
+        print("3 - Curiosidades")
+        print("4 - Sair")
+
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == "1":
+            menu_conta()
+        elif opcao == "2":
+            mostrar_duvidas()
+        elif opcao == "3":
+            mostrar_curiosidades()
+        elif opcao == "4":
+            print("Encerrando o programa... Até logo! 👋")
+            break
+        else:
+            print("Opção inválida. Tente novamente.")
+
+# ========== INÍCIO DO PROGRAMA ==========
+
+def iniciar_app():
+    carregar_usuarios()
+    while True:
+        print("\n=== BEM-VINDO AO APP DE EDUCAÇÃO FINANCEIRA ===")
+        print("1 - Login")
+        print("2 - Cadastrar novo usuário")
+        print("3 - Sair")
+
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == "1":
+            if login():
+                menu_principal()
+        elif opcao == "2":
+            cadastrar_usuario()
+        elif opcao == "3":
+            print("Encerrando o programa... Até mais!")
+            break
+        else:
+            print("Opção inválida. Tente novamente.")
+
+# Inicia o app
+iniciar_app()
